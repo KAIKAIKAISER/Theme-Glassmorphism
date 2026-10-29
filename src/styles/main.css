@@ -323,16 +323,20 @@ html.legacy-webkit [data-slot='card'] {
 .dark .node-card,
 .dark .bg-card,
 .dark [data-slot='card'] {
-  /* Dark mode: keep a translucent glass feel while improving foreground contrast */
-  background-color: var(--glass-dark-card, rgb(10 14 22 / 0.82)) !important;
-  border: 1px solid var(--glass-dark-border, rgb(255 255 255 / 0.18)) !important;
-  box-shadow: var(--glass-dark-shadow, 0 8px 30px rgb(0 0 0 / 0.48)) !important;
+  /* True Glassmorphism: translucent dark charcoal base allowing sunset glow & aurora to shine through */
+  background-color: var(--glass-dark-card, rgba(16, 20, 32, 0.60)) !important;
+  border: 1px solid var(--glass-dark-border, rgba(255, 255, 255, 0.16)) !important;
+  backdrop-filter: blur(20px) saturate(185%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(185%) contrast(105%) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
 .dark .node-card:hover,
 .dark .bg-card:hover,
 .dark [data-slot='card']:hover {
-  background-color: var(--glass-dark-card-hover, rgb(10 14 22 / 0.9)) !important;
+  background-color: var(--glass-dark-card-hover, rgba(22, 28, 44, 0.70)) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow: 0 14px 38px -5px rgba(0, 0, 0, 0.55), inset 0 1px 1px 0 rgba(255, 255, 255, 0.22) !important;
 }
 
 .node-card,

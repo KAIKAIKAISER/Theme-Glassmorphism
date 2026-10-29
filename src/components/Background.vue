@@ -207,7 +207,7 @@ onUnmounted(() => {
 }
 
 .dark .default-background {
-  filter: brightness(0.50) saturate(0.95) contrast(1.06);
+  filter: brightness(0.90) saturate(1.15) contrast(1.08);
 }
 
 .aurora-ambient {
