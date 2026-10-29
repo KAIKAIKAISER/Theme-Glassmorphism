@@ -1,5 +1,5 @@
 {
-  "name": "monitor-theme-glassmorphism",
+  "name": "cfsm-theme-glassmorphism",
   "type": "module",
   "author": {
     "name": "Gongsc",
@@ -23,14 +23,11 @@
     "@vueuse/core": "^14.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cobe": "^2.0.1",
     "dayjs": "^1.11.19",
     "echarts": "^6.0.0",
-    "globe.gl": "^2.46.1",
     "pinia": "^3.0.4",
     "reka-ui": "^2.6.1",
     "tailwind-merge": "^3.4.0",
-    "three": "^0.184.0",
     "vue": "^3.5.28",
     "vue-echarts": "^8.0.1",
     "vue-router": "^5.0.2",
@@ -43,7 +40,6 @@
     "@tailwindcss/vite": "^4.1.16",
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.10.13",
-    "@types/three": "^0.184.1",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.8.1",
@@ -62,5 +58,6 @@
     "vue-tsc": "^3.2.4",
     "oxlint": "^1.79.0"
   },
-  "version": "1.4.6"
+  "version": "1.4.6",
+  "description": "Glassmorphism theme for CF-Server-Monitor without rotating earth and with 6-line 3-net V4/V6 display"
 }

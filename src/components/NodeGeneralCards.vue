@@ -643,7 +643,7 @@ function getCardDefinition(key: GeneralCardKey): GeneralMetricCard {
 }
 
 const visibleCards = computed(() => appStore.generalCardOrder.map(getCardDefinition))
-const showEarth = computed(() => !appStore.hideEarth)
+const showEarth = computed(() => false)
 const isTiledEarth = computed(() => showEarth.value && (appStore.earthRenderer === 'tiled' || appStore.earthRenderer === 'dots'))
 const shouldRenderHeader = computed(() => showEarth.value || visibleCards.value.length > 0)
 const hasExtraCards = computed(() => visibleCards.value.length > 6)
@@ -666,7 +666,7 @@ const earthClass = computed(() => {
 })
 const cardGridClass = computed(() => {
   if (!showEarth.value)
-    return 'col-span-1 grid grid-cols-3 md:grid-cols-6 gap-2'
+    return 'col-span-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3'
 
   if (isTiledEarth.value)
     return 'col-span-12 row-start-1 z-9 grid grid-cols-12 auto-rows-[4.75rem] sm:auto-rows-[5rem] md:auto-rows-[5.8rem] gap-2 sm:gap-3'
@@ -752,11 +752,7 @@ onMounted(async () => {
 
 <template>
   <div v-if="shouldRenderHeader" :class="wrapperClass">
-    <NodeEarthGlobe
-      v-if="showEarth"
-      :nodes="globeNodes"
-      :class="earthClass"
-    />
+    <!-- Earth globe removed for clean responsive layout -->
 
     <div v-if="visibleCards.length > 0" :class="cardGridClass">
       <CardX

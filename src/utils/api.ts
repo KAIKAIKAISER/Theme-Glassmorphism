@@ -1,4 +1,4 @@
-import { historyHours, request, records } from '@/monitor/transport'
+import { getAuthToken, historyHours, request, records } from '@/monitor/transport'
 import { loadConfig } from '@/monitor/config'
 import { NETWORK_CONFIG } from '@/constants/network'
 
@@ -399,9 +399,8 @@ export class KomariApi {
    * 注意：此接口返回的是直接的 MeInfo 对象，不是包裹在 { status, message, data } 中
    */
   async getMe(): Promise<MeInfo> {
-    const me = await request<{ authed: boolean; public_page: boolean }>('/me')
-    if (!me.public_page && !me.authed) location.assign('/admin/')
-    return { logged_in: me.authed, username: me.authed ? '管理员' : '' }
+    const token = getAuthToken()
+    return { logged_in: Boolean(token), username: token ? '管理员' : '' }
   }
 
   // ===== 服务端公开属性 =====
@@ -410,9 +409,45 @@ export class KomariApi {
    * 获取站点的公开设置属性
    */
   async getPublicSettings(): Promise<PublicSettings> {
-    const [me, config] = await Promise.all([request<{ site_name: string; public_page: boolean; authed: boolean; history_days?: number }>('/me'), loadConfig()])
-    const preserveHours = historyHours(me.history_days, me.authed)
-    return { sitename: me.site_name, description: '', allow_cors: false, custom_body: '', custom_head: '', disable_password_login: false, oauth_enable: false, oauth_provider: null, private_site: !me.public_page, record_enabled: true, record_preserve_time: preserveHours, ping_record_preserve_time: preserveHours, theme: 'glassmorphism', theme_settings: config }
+    try {
+      const config = await request<any>('/api/config')
+      const sitename = config.title || 'CF-Server-Monitor'
+      const isPrivate = config.is_public !== 'true'
+      const themeSettings = config.appearance_options?.theme_options || config.theme_options || {}
+      return {
+        sitename,
+        description: '',
+        allow_cors: false,
+        custom_body: config.custom_body || '',
+        custom_head: config.custom_head || '',
+        disable_password_login: false,
+        oauth_enable: false,
+        oauth_provider: null,
+        private_site: isPrivate,
+        record_enabled: true,
+        record_preserve_time: 168,
+        ping_record_preserve_time: 168,
+        theme: 'glassmorphism',
+        theme_settings: themeSettings,
+      }
+    } catch {
+      return {
+        sitename: 'CF-Server-Monitor',
+        description: '',
+        allow_cors: false,
+        custom_body: '',
+        custom_head: '',
+        disable_password_login: false,
+        oauth_enable: false,
+        oauth_provider: null,
+        private_site: false,
+        record_enabled: true,
+        record_preserve_time: 168,
+        ping_record_preserve_time: 168,
+        theme: 'glassmorphism',
+        theme_settings: {},
+      }
+    }
   }
 
   /**

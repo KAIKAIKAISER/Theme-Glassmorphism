@@ -85,7 +85,7 @@ function handleButtonClick(action: string) {
         path: router.currentRoute.value.path,
         route: String(router.currentRoute.value.name ?? ''),
       })
-      location.href = '/admin'
+      location.href = '/admin#/admin'
       break
   }
 }

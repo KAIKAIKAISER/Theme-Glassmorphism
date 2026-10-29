@@ -1,73 +1,101 @@
-export type Metrics = {
-  uptime: number
-  cpu: number
-  load: [number, number, number]
-  mem_total: number
-  mem_used: number
-  swap_total: number
-  swap_used: number
-  disk_total: number
-  disk_used: number
-  net_rx: number
-  net_tx: number
-  total_rx: number
-  total_tx: number
-  month_rx: number
-  month_tx: number
-  tcp: number
-  udp: number
-  procs: number
+export interface CFServer {
+  id: string | number
+  name: string
+  server_group?: string
+  tags?: string
+  price?: string | number
+  billing_cycle?: string
+  auto_renewal?: string | boolean
+  currency?: string
+  expire_date?: string
+  traffic_limit?: string
+  traffic_calc_type?: string
+  reset_day?: number
+  sort_order?: number
+  cpu?: number
+  load_avg?: string
+  net_in_speed?: number
+  net_out_speed?: number
+  net_rx?: number
+  net_tx?: number
+  net_rx_monthly?: number
+  net_tx_monthly?: number
+  processes?: number
+  tcp_conn?: number
+  udp_conn?: number
+  ram_total?: number
+  ram_used?: number
+  swap_total?: number
+  swap_used?: number
+  disk_total?: number
+  disk_used?: number
+  cpu_cores?: number
+  cpu_info?: string
+  arch?: string
+  os?: string
+  kernel_version?: string
+  region?: string
+  ip_v4?: string
+  ip_v6?: string
+  boot_time?: number | string
+  last_updated?: number
+  timestamp?: number
+  online?: boolean
+  ping_ct?: number | null | false
+  ping_cu?: number | null | false
+  ping_cm?: number | null | false
+  ping_node_1?: number | null | false
+  ping_node_2?: number | null | false
+  ping_node_3?: number | null | false
+  loss_ct?: number | null | false
+  loss_cu?: number | null | false
+  loss_cm?: number | null | false
+  loss_node_1?: number | null | false
+  loss_node_2?: number | null | false
+  loss_node_3?: number | null | false
+  ping?: Array<Record<string, number | null>>
+  loss?: Array<Record<string, number | null>>
 }
 
-export type Node = {
-  id: number
-  name: string
-  sort: number
-  /** Single public group name; absent on legacy hubs. */
-  group?: string
-  public: boolean
-  online: boolean
-  /** ISO 3166-1 alpha-2, or empty when the hub could not locate the address. */
-  country: string
-  last_seen: number
-  metrics: Metrics | null
-  os: string
-  kernel: string
-  arch: string
-  virt: string
-  cpu_name: string
-  cpu_cores: number
-  mem_total: number
-  swap_total: number
-  disk_total: number
-  agent_version: string
-  price: number
-  currency: string
-  billing_cycle: string
-  expires_at: string | null
-  /** Hub calendar days; null means unset, undefined means legacy hub. */
-  expires_in?: number | null
-  traffic_limit: number
-  traffic_mode: string
-  traffic_reset_day: number
-  total_rx: number
-  total_tx: number
-  month_rx: number
-  month_tx: number
-  /** This period's usage as the node's traffic_mode meters it; absent on older hubs. */
-  month_used?: number
-  month_start: string
-  day_rx: number
-  day_tx: number
-  /** Panel only. */
-  hostname?: string
-  ip?: string
-  ipv4?: string
-  ipv6?: string
-  /** Hub-selected display addresses, at most one per family, v4 first. */
-  addresses?: { address: string, source: string }[]
-  /** Panel only; the owner's private note. */
-  remark?: string
-  /** One-line note for visitors, at most 100 chars; absent before hub 1.3.2. */
-  public_remark?: string
+export interface CFServersResponse {
+  servers: CFServer[]
+  stats?: {
+    total?: number
+    online?: number
+    offline?: number
+    globalSpeedIn?: number
+    globalSpeedOut?: number
+    globalNetTx?: number
+    globalNetRx?: number
+  }
+  regionStats?: Record<string, number>
+  sysConfig?: Record<string, unknown>
+}
+
+export interface CFHistoryPoint {
+  ts: number
+  cpu?: number
+  ram_used?: number
+  ram_total?: number
+  disk_used?: number
+  disk_total?: number
+  swap_used?: number
+  swap_total?: number
+  net_in_speed?: number
+  net_out_speed?: number
+  tcp_conn?: number
+  udp_conn?: number
+  processes?: number
+  ping_ct?: number | null
+  ping_cu?: number | null
+  ping_cm?: number | null
+  ping_node_1?: number | null
+  ping_node_2?: number | null
+  ping_node_3?: number | null
+  loss_ct?: number | null
+  loss_cu?: number | null
+  loss_cm?: number | null
+  loss_node_1?: number | null
+  loss_node_2?: number | null
+  loss_node_3?: number | null
 }

@@ -34,10 +34,10 @@ const formattedServerVersion = computed(() => serverVersion.value?.version ?? ''
           :content="formattedServerVersion"
         >
           <a
-            href="https://github.com/monitor-probe/monitor" target="_blank" rel="noopener noreferrer"
+            href="https://github.com/huilang-me/CF-Server-Monitor/" target="_blank" rel="noopener noreferrer"
             class="transition-opacity hover:opacity-80"
           >
-            <span class="font-medium text-foreground">极简探针 Monitor</span>
+            <span class="font-medium text-foreground">CF-Server-Monitor</span>
           </a>
         </DataTooltip>
       </div>
@@ -49,7 +49,7 @@ const formattedServerVersion = computed(() => serverVersion.value?.version ?? ''
           :content="`v${buildVersion}\n${buildGitHash}`"
         >
           <a
-            href="https://github.com/Gongsc/Theme-Glassmorphism" target="_blank" rel="noopener noreferrer"
+            href="https://github.com/KAIKAIKAISER/Theme-Glassmorphism" target="_blank" rel="noopener noreferrer"
             class="transition-opacity hover:opacity-80"
           >
             <span class="font-medium text-foreground">Glassmorphism</span>

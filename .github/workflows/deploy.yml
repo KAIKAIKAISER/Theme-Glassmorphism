@@ -1,0 +1,69 @@
+name: Build and Deploy Theme to dist branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-theme-dist-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Capture HEAD commit message
+        id: meta
+        run: |
+          MSG=$(git log -1 --pretty=%s)
+          echo "commit_msg=$MSG" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build static theme
+        run: npm run build
+
+      - name: Append build artifacts to dist branch without force push
+        env:
+          COMMIT_MSG: ${{ steps.meta.outputs.commit_msg }}
+        run: |
+          mkdir -p /tmp/theme-build
+          cp -r dist/* /tmp/theme-build/
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin dist >/dev/null 2>&1; then
+            git fetch origin dist:dist
+            git checkout dist
+            git rm -rf . >/dev/null 2>&1 || true
+          else
+            git checkout --orphan dist
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+
+          cp -r /tmp/theme-build/* ./
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes in build artifacts."
+          else
+            git commit -m "${COMMIT_MSG:-Build theme}"
+            git push origin dist
+          fi
