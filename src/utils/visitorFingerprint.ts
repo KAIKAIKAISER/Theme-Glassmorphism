@@ -86,76 +86,13 @@ function getAddressKind(address: string): string {
 }
 
 async function collectWebRtcProfile(siteScope: string): Promise<VisitorSecurityProfile['webrtc']> {
-  if (typeof RTCPeerConnection === 'undefined') {
-    return {
-      supported: false,
-      candidate_count: 0,
-      candidate_types: [],
-      protocols: [],
-      address_kinds: [],
-      fingerprint_id: '',
-    }
-  }
-
-  const candidateTypes = new Set<string>()
-  const protocols = new Set<string>()
-  const addressKinds = new Set<string>()
-  const candidateSignatures = new Set<string>()
-  let peer: RTCPeerConnection | null = null
-
-  try {
-    peer = new RTCPeerConnection({ iceServers: [] })
-    peer.createDataChannel('visitor-audit')
-
-    const gathered = new Promise<void>((resolve) => {
-      if (!peer) {
-        resolve()
-        return
-      }
-
-      peer.onicecandidate = (event) => {
-        const candidate = event.candidate
-        if (!candidate) {
-          resolve()
-          return
-        }
-
-        const raw = trimProfileString(candidate.candidate)
-        const type = trimProfileString(candidate.type || ICE_TYPE_REGEX.exec(raw)?.[1]).toLowerCase()
-        const protocol = trimProfileString(candidate.protocol || ICE_PROTOCOL_REGEX.exec(raw)?.[1]).toLowerCase()
-        const address = trimProfileString(candidate.address || raw.split(' ')[4])
-
-        if (type)
-          candidateTypes.add(type)
-        if (protocol)
-          protocols.add(protocol)
-        addressKinds.add(getAddressKind(address))
-        if (raw)
-          candidateSignatures.add(`${type || 'unknown'}|${protocol || 'unknown'}|${address || 'unknown'}`)
-      }
-    })
-
-    const offer = await peer.createOffer()
-    await peer.setLocalDescription(offer)
-    await Promise.race([
-      gathered,
-      new Promise<void>(resolve => window.setTimeout(resolve, WEBRTC_GATHER_TIMEOUT_MS)),
-    ])
-  }
-  catch {
-  }
-  finally {
-    peer?.close()
-  }
-
-  const fingerprintSource = [...candidateSignatures].sort().join('|')
   return {
-    supported: true,
-    candidate_count: candidateSignatures.size,
-    candidate_types: [...candidateTypes].sort(),
-    protocols: [...protocols].sort(),
-    address_kinds: [...addressKinds].sort(),
-    fingerprint_id: fingerprintSource ? await sha256(`${siteScope}|webrtc|${fingerprintSource}`) : '',
+    supported: false,
+    candidate_count: 0,
+    candidate_types: [],
+    protocols: [],
+    address_kinds: [],
+    fingerprint_id: '',
   }
 }
 

@@ -117,7 +117,7 @@
     {
       "key": "stopEarth",
       "type": "boolean",
-      "default": false,
+      "default": true,
       "help": "开启后地球默认不自动旋转，用户仍可手动拖拽查看；点阵平铺地图同时停止扫描线与波纹动画",
       "label": "停止地球旋转"
     },
@@ -163,8 +163,8 @@
     {
       "key": "hideEarth",
       "type": "boolean",
-      "default": false,
-      "help": "隐藏地球后仅显示总览卡片",
+      "default": true,
+      "help": "隐藏地球后仅显示总览卡片（默认隐藏以节省算力与空间）",
       "label": "隐藏地球"
     },
     {
@@ -619,14 +619,14 @@
       "key": "homepageMultiPingTaskIds",
       "type": "string",
       "default": "",
-      "help": "按显示顺序填写后台延迟监控的完整名称，例如：浙江电信,浙江联通,浙江移动。使用逗号分隔，名称须完全一致；也兼容任务 ID。留空自动显示可用线路；未匹配、未绑定或无采样显示空白。同名任务会全部匹配。",
+      "help": "按显示顺序填写后台延迟监控名称，如：电信 V4, 联通 V4, 移动 V4, 电信 V6, 联通 V6, 移动 V6。留空自动按顺序显示前 6 条可用线路。",
       "label": "首页探测线路名称或 ID"
     },
     {
       "key": "homepageMultiPingCount",
       "type": "number",
-      "default": 3,
-      "help": "每张卡片显示 1–8 条线路，默认 3 条。色条展示最近 1 小时，数字延迟为最新采样，丢包率使用后端窗口汇总。",
+      "default": 6,
+      "help": "每张卡片显示 1–8 条线路，默认 6 条（满足电信/联通/移动 V4 与 V6 三网双栈展示）。",
       "label": "最多显示线路数",
       "min": 1,
       "max": 8

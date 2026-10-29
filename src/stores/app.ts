@@ -919,14 +919,14 @@ const useAppStore = defineStore('app', () => {
 
   const dataUpdateInterval = computed<number>(() => readNumberSetting(themeSettings.value, 'dataUpdateInterval', 3, 1, 60))
 
-  const stopEarth = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'stopEarth', false))
+  const stopEarth = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'stopEarth', true))
 
   const earthRenderer = computed<EarthRenderer>(() => {
     const value = themeSettings.value.earthRenderer
     return isValidEarthRenderer(value) ? value : 'realistic'
   })
 
-  const hideEarth = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'hideEarth', false))
+  const hideEarth = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'hideEarth', true))
 
   const hideGeneralCard = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'hideGeneralCard', false))
 

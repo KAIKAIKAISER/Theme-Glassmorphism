@@ -1,7 +1,7 @@
 export type PingSample = { task_id: number; time: string; value: number; monitor_bucket_loss?: number }
 export type PingTask = { id: number; name: string; loss: number }
 export type PingBar = { time: string; latency: number | null; loss: number | null }
-export function buildPingRows(records: PingSample[], tasks: PingTask[], selected: string, limit = 3) {
+export function buildPingRows(records: PingSample[], tasks: PingTask[], selected: string, limit = 6) {
   // Names may contain spaces; retain whitespace-separated IDs from older configs.
   const tokens = selected.trim().split(/[,，;；\n]+/).flatMap(part => {
     const value = part.trim()
