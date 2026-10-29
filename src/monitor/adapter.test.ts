@@ -29,6 +29,8 @@ const server: CFServer = {
   currency: 'USD',
   billing_cycle: 'yearly',
   expire_date: '2027-01-01',
+  traffic_limit: '1000.0',
+  traffic_calc_type: 'total',
 }
 
 const { client, status } = mapServerToNode(server)
@@ -45,5 +47,6 @@ assert.equal(status.disk, 5120 * 1024 * 1024)
 assert.equal(status.disk_total, 20480 * 1024 * 1024)
 assert.equal(status.net_in, 1024)
 assert.equal(status.net_out, 2048)
+assert.equal(client.traffic_limit, 1000 * 1024 * 1024 * 1024)
 
 console.log('CFServer adapter mapping tests passed!')

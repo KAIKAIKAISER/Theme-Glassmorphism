@@ -26,7 +26,7 @@ export function cycleDays(cycle: string | undefined): number {
   return months % 12 === 0 ? (months / 12) * 365 : months * 30
 }
 
-export function parseTrafficLimit(limit: string | undefined): number {
+export function parseTrafficLimit(limit: string | number | undefined): number {
   if (!limit) return 0
   const raw = String(limit).trim().toUpperCase()
   const num = Number.parseFloat(raw)
@@ -35,7 +35,10 @@ export function parseTrafficLimit(limit: string | undefined): number {
   if (raw.endsWith('GB') || raw.endsWith('G')) return num * 1024 * 1024 * 1024
   if (raw.endsWith('MB') || raw.endsWith('M')) return num * 1024 * 1024
   if (raw.endsWith('KB') || raw.endsWith('K')) return num * 1024
-  return num
+  if (raw.endsWith('B')) return num
+  // In CF-Server-Monitor, raw numeric traffic_limit is configured in GB (e.g. 1000 or 1000.0)
+  if (num > 1e11) return num
+  return num * 1024 * 1024 * 1024
 }
 
 export function parseLoad(loadStr: string | undefined): [number, number, number] {

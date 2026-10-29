@@ -47,15 +47,19 @@ export interface CFServer {
   ping_cm?: number | null | false
   ping_node_1?: number | null | false
   ping_node_2?: number | null | false
+  ping_bd?: number | null | false
   ping_node_3?: number | null | false
+  ping_node_4?: number | null | false
   loss_ct?: number | null | false
   loss_cu?: number | null | false
   loss_cm?: number | null | false
+  loss_bd?: number | null | false
   loss_node_1?: number | null | false
   loss_node_2?: number | null | false
   loss_node_3?: number | null | false
-  ping?: Array<Record<string, number | null>>
-  loss?: Array<Record<string, number | null>>
+  loss_node_4?: number | null | false
+  ping?: Array<Record<string, number | null | boolean>>
+  loss?: Array<Record<string, number | null | boolean>>
 }
 
 export interface CFServersResponse {

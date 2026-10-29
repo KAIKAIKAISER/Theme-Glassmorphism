@@ -6,10 +6,11 @@ export const CFSM_PING_DEFINITIONS = [
   { id: 1, key: 'ct', name: '电信 V4', pingField: 'ping_ct', lossField: 'loss_ct', color: '#38bdf8' },
   { id: 2, key: 'cu', name: '联通 V4', pingField: 'ping_cu', lossField: 'loss_cu', color: '#fb923c' },
   { id: 3, key: 'cm', name: '移动 V4', pingField: 'ping_cm', lossField: 'loss_cm', color: '#34d399' },
-  { id: 4, key: 'node_1', name: '电信 V6', pingField: 'ping_node_1', lossField: 'loss_node_1', color: '#f472b6' },
-  { id: 5, key: 'node_2', name: '联通 V6', pingField: 'ping_node_2', lossField: 'loss_node_2', color: '#facc15' },
-  { id: 6, key: 'node_3', name: '移动 V6', pingField: 'ping_node_3', lossField: 'loss_node_3', color: '#2dd4bf' },
-  { id: 7, key: 'bd', name: 'BGP', pingField: 'ping_bd', lossField: 'loss_bd', color: '#a78bfa' },
+  { id: 4, key: 'bd', name: 'BGP', pingField: 'ping_bd', lossField: 'loss_bd', color: '#a78bfa' },
+  { id: 5, key: 'node_1', name: '电信 V6', pingField: 'ping_node_1', lossField: 'loss_node_1', color: '#f472b6' },
+  { id: 6, key: 'node_2', name: '联通 V6', pingField: 'ping_node_2', lossField: 'loss_node_2', color: '#facc15' },
+  { id: 7, key: 'node_3', name: '移动 V6', pingField: 'ping_node_3', lossField: 'loss_node_3', color: '#2dd4bf' },
+  { id: 8, key: 'node_4', name: 'Node 4', pingField: 'ping_node_4', lossField: 'loss_node_4', color: '#fb7185' },
 ] as const
 
 const serverCache = new Map<string, CFServer>()
@@ -151,7 +152,7 @@ export async function records(params: Record<string, unknown>, ping = false) {
 
     const pingWindow = Array.isArray(server.ping) ? server.ping : []
     const lossWindow = Array.isArray(server.loss) ? server.loss : []
-    const lossMap = new Map<number, Record<string, number | null>>()
+    const lossMap = new Map<number, Record<string, number | null | boolean>>()
     for (const l of lossWindow) {
       if (l && typeof l.ts === 'number') lossMap.set(l.ts, l)
     }
@@ -159,11 +160,14 @@ export async function records(params: Record<string, unknown>, ping = false) {
     for (const def of CFSM_PING_DEFINITIONS) {
       const rawPing = (server as unknown as Record<string, unknown>)[def.pingField]
       const rawLoss = (server as unknown as Record<string, unknown>)[def.lossField]
-      if (rawPing === false && rawLoss === false && pingWindow.length === 0) {
+      if (rawPing === false || rawPing === 'false') {
+        continue
+      }
+      if (rawPing === undefined && rawLoss === undefined && pingWindow.length === 0) {
         continue
       }
 
-      const lossVal = typeof rawLoss === 'number' && Number.isFinite(rawLoss) ? rawLoss : 0
+      const lossVal = typeof rawLoss === 'number' && Number.isFinite(rawLoss) ? rawLoss : (rawPing === null ? 100 : 0)
       const currentPing = typeof rawPing === 'number' && Number.isFinite(rawPing) && rawPing >= 0
         ? rawPing
         : rawPing === null ? -1 : undefined
@@ -180,16 +184,17 @@ export async function records(params: Record<string, unknown>, ping = false) {
       // Generate points from 2-hour window samples
       for (const p of pingWindow) {
         if (!p || typeof p.ts !== 'number') continue
-        const val = p[def.key]
-        if (val === undefined || val === null) continue
-        const numVal = typeof val === 'number' && Number.isFinite(val) && val >= 0 ? val : -1
-        const sampleLoss = lossMap.get(p.ts)?.[def.key]
-        const bucketLoss = typeof sampleLoss === 'number' && Number.isFinite(sampleLoss) ? sampleLoss : 0
+        const rawVal = (p as Record<string, unknown>)[def.key]
+        if (rawVal === undefined || typeof rawVal === 'boolean' || rawVal === 'false') continue
+        const numVal = typeof rawVal === 'number' && Number.isFinite(rawVal) && rawVal >= 0 ? rawVal : -1
+        const sampleLoss = (lossMap.get(p.ts) as Record<string, unknown> | undefined)?.[def.key]
+        const bucketLoss = typeof sampleLoss === 'number' && Number.isFinite(sampleLoss) ? sampleLoss : (numVal < 0 ? 100 : 0)
 
+        const tsMs = p.ts > 1e11 ? p.ts : p.ts * 1000
         recordsList.push({
           client: uuid,
           task_id: def.id,
-          time: new Date(p.ts * 1000).toISOString(),
+          time: new Date(tsMs).toISOString(),
           value: numVal,
           monitor_bucket_loss: bucketLoss,
           monitor_window_loss: lossVal,
