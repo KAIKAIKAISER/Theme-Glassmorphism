@@ -1,4 +1,4 @@
-import { getAuthToken, historyHours, request, records } from '@/monitor/transport'
+import { getAuthToken, historyHours, request, records, setCachedConfig } from '@/monitor/transport'
 import { loadConfig } from '@/monitor/config'
 import { NETWORK_CONFIG } from '@/constants/network'
 
@@ -411,6 +411,7 @@ export class KomariApi {
   async getPublicSettings(): Promise<PublicSettings> {
     try {
       const config = await request<any>('/api/config')
+      setCachedConfig(config)
       const sitename = config.title || 'CF-Server-Monitor'
       const isPrivate = config.is_public !== 'true'
       const themeSettings = config.appearance_options?.theme_options || config.theme_options || {}

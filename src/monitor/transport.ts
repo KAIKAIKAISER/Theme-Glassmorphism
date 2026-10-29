@@ -3,15 +3,21 @@ import type { Client, NodeStatus, PingRecord, PingTaskInfo, StatusRecord } from 
 import { mapServerToNode } from './mapping.ts'
 
 export const CFSM_PING_DEFINITIONS = [
-  { id: 1, key: 'ct', name: '电信 V4', pingField: 'ping_ct', lossField: 'loss_ct', color: '#38bdf8' },
-  { id: 2, key: 'cu', name: '联通 V4', pingField: 'ping_cu', lossField: 'loss_cu', color: '#fb923c' },
-  { id: 3, key: 'cm', name: '移动 V4', pingField: 'ping_cm', lossField: 'loss_cm', color: '#34d399' },
-  { id: 4, key: 'bd', name: 'BGP', pingField: 'ping_bd', lossField: 'loss_bd', color: '#a78bfa' },
-  { id: 5, key: 'node_1', name: '电信 V6', pingField: 'ping_node_1', lossField: 'loss_node_1', color: '#f472b6' },
-  { id: 6, key: 'node_2', name: '联通 V6', pingField: 'ping_node_2', lossField: 'loss_node_2', color: '#facc15' },
-  { id: 7, key: 'node_3', name: '移动 V6', pingField: 'ping_node_3', lossField: 'loss_node_3', color: '#2dd4bf' },
-  { id: 8, key: 'node_4', name: 'Node 4', pingField: 'ping_node_4', lossField: 'loss_node_4', color: '#fb7185' },
+  { id: 1, key: 'ct', nameField: 'custom_ct_name', fallback: '福建电信 V4', pingField: 'ping_ct', lossField: 'loss_ct', color: '#38bdf8' },
+  { id: 2, key: 'cu', nameField: 'custom_cu_name', fallback: '福建联通 V4', pingField: 'ping_cu', lossField: 'loss_cu', color: '#fb923c' },
+  { id: 3, key: 'cm', nameField: 'custom_cm_name', fallback: '福建移动 V4', pingField: 'ping_cm', lossField: 'loss_cm', color: '#34d399' },
+  { id: 4, key: 'bd', nameField: 'custom_bd_name', fallback: 'BGP', pingField: 'ping_bd', lossField: 'loss_bd', color: '#a78bfa' },
+  { id: 5, key: 'node_1', nameField: 'node_1_name', fallback: '福建电信 V6', pingField: 'ping_node_1', lossField: 'loss_node_1', color: '#f472b6' },
+  { id: 6, key: 'node_2', nameField: 'node_2_name', fallback: '福建联通 V6', pingField: 'ping_node_2', lossField: 'loss_node_2', color: '#facc15' },
+  { id: 7, key: 'node_3', nameField: 'node_3_name', fallback: '福建移动 V6', pingField: 'ping_node_3', lossField: 'loss_node_3', color: '#2dd4bf' },
+  { id: 8, key: 'node_4', nameField: 'node_4_name', fallback: 'Node 4', pingField: 'ping_node_4', lossField: 'loss_node_4', color: '#fb7185' },
 ] as const
+
+let cachedConfig: Record<string, unknown> = {}
+
+export function setCachedConfig(cfg: Record<string, unknown>) {
+  cachedConfig = cfg || {}
+}
 
 const serverCache = new Map<string, CFServer>()
 let cachedNodes: { clients: Record<string, Client>, statuses: Record<string, NodeStatus> } = { clients: {}, statuses: {} }
@@ -172,9 +178,16 @@ export async function records(params: Record<string, unknown>, ping = false) {
         ? rawPing
         : rawPing === null ? -1 : undefined
 
+      const configuredName = typeof cachedConfig[def.nameField] === 'string' && cachedConfig[def.nameField]
+        ? String(cachedConfig[def.nameField]).trim()
+        : ''
+      const displayName = configuredName && configuredName !== '电信 V4' && configuredName !== '联通 V4' && configuredName !== '移动 V4' && configuredName !== '电信 V6' && configuredName !== '联通 V6' && configuredName !== '移动 V6'
+        ? configuredName
+        : def.fallback
+
       tasks.push({
         id: def.id,
-        name: def.name,
+        name: displayName,
         interval: 60,
         loss: lossVal,
         clients: [uuid],
