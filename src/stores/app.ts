@@ -798,7 +798,7 @@ const useAppStore = defineStore('app', () => {
   const loading = ref<boolean>(true)
 
   // 使用 VueUse 的 useStorageAsync 实现自动持久化
-  const themeMode = useStorageAsync<ThemeMode>('themeMode', 'auto', safeStorage)
+  const themeMode = useStorageAsync<ThemeMode>('themeMode', 'dark', safeStorage)
   const lang = ref<Lang>('zh-CN')
   const publicSettings = ref<PublicSettings>()
   const nodeSelectedGroup = useStorageAsync<string>('monitor:nodeSelectedGroup:v2', 'all', safeStorage)
@@ -1136,7 +1136,7 @@ const useAppStore = defineStore('app', () => {
 
   const managedThemeMode = computed<ManagedThemeMode>(() => {
     const value = themeSettings.value.themeMode
-    return isValidManagedThemeMode(value) ? value : 'beijing'
+    return isValidManagedThemeMode(value) ? value : 'dark'
   })
 
   const isBeijingDaytime = computed<boolean>(() => {

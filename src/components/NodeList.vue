@@ -209,7 +209,7 @@ const nodeMetadataItemsByUuid = computed(() => {
 })
 
 function getFlagSrc(region: string): string {
-  return `/images/flags/${getRegionCode(region)}.svg`
+  return `/assets/images/flags/${(getRegionCode(region) || 'UN').toUpperCase()}.svg`
 }
 
 function getRegionAltText(region: string): string {

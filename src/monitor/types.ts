@@ -13,6 +13,7 @@ export interface CFServer {
   reset_day?: number
   sort_order?: number
   cpu?: number
+  cpu_usage?: number
   load_avg?: string
   net_in_speed?: number
   net_out_speed?: number
@@ -75,6 +76,7 @@ export interface CFServersResponse {
 export interface CFHistoryPoint {
   ts: number
   cpu?: number
+  cpu_usage?: number
   ram_used?: number
   ram_total?: number
   disk_used?: number

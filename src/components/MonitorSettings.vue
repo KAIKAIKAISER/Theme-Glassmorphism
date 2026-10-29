@@ -123,7 +123,7 @@ async function upload(event: Event) {
 }
 // 站点图标：上传的图片保存为 data URL，输入框改为显示体积，避免展示整段 base64。
 const siteIconValue = computed(() => String(values.value.siteIconUrl ?? ''))
-const siteIconPreview = computed(() => resolveSiteIcon(siteIconValue.value) || '/favicon.svg')
+const siteIconPreview = computed(() => resolveSiteIcon(siteIconValue.value) || '/assets/favicon.svg')
 const siteIconUploaded = computed(() => siteIconValue.value.startsWith('data:'))
 const siteIconSize = computed(() => `${(siteIconValue.value.length / 1024).toFixed(1)} KiB`)
 async function uploadSiteIcon(event: Event) {

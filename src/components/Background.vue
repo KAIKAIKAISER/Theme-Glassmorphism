@@ -148,6 +148,7 @@ onUnmounted(() => {
 
 <template>
   <div class="background-container" :style="backgroundContainerStyle">
+    <div class="aurora-ambient" />
     <Transition name="fade">
       <div v-if="showDefaultBackground" class="default-background" />
     </Transition>
@@ -196,7 +197,7 @@ onUnmounted(() => {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-image: url('/images/default-background-v2.webp');
+  background-image: url('/assets/images/default-background-v2.webp');
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
@@ -206,7 +207,27 @@ onUnmounted(() => {
 }
 
 .dark .default-background {
-  filter: brightness(0.38) saturate(0.82) contrast(1.08);
+  filter: brightness(0.50) saturate(0.95) contrast(1.06);
+}
+
+.aurora-ambient {
+  position: absolute;
+  inset: -20%;
+  background: 
+    radial-gradient(ellipse 60% 45% at 15% 20%, rgba(124, 58, 237, 0.25) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 85% 15%, rgba(245, 158, 11, 0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 45% at 50% 85%, rgba(16, 185, 129, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 45% at 80% 75%, rgba(236, 72, 153, 0.20) 0%, transparent 60%);
+  filter: blur(60px);
+  animation: aurora-shift 24s ease-in-out infinite alternate;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+@keyframes aurora-shift {
+  0% { transform: scale(1) translate(0%, 0%) rotate(0deg); }
+  50% { transform: scale(1.05) translate(2%, -1%) rotate(1deg); }
+  100% { transform: scale(1.02) translate(-1.5%, 1.5%) rotate(-1deg); }
 }
 
 @media (max-width: 768px) {

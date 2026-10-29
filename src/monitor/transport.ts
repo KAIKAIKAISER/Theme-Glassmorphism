@@ -1,6 +1,6 @@
 import type { CFHistoryPoint, CFServer, CFServersResponse } from './types'
 import type { Client, NodeStatus, PingRecord, PingTaskInfo, StatusRecord } from '@/utils/rpc'
-import { mapServerToNode } from './mapping'
+import { mapServerToNode } from './mapping.ts'
 
 export const CFSM_PING_DEFINITIONS = [
   { id: 1, key: 'ct', name: '电信 V4', pingField: 'ping_ct', lossField: 'loss_ct', color: '#38bdf8' },

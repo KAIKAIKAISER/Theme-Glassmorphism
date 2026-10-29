@@ -111,7 +111,7 @@ export function mapServerToNode(s: CFServer): { client: Client, status: NodeStat
     client: uuid,
     time: new Date(lastSeen).toISOString(),
     online,
-    cpu: Number(s.cpu) || 0,
+    cpu: Number(s.cpu !== undefined ? s.cpu : s.cpu_usage) || 0,
     ram: ramUsed,
     ram_total: memTotal,
     swap: swapUsed,

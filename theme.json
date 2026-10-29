@@ -13,7 +13,7 @@
     {
       "key": "themeMode",
       "type": "select",
-      "default": "beijing",
+      "default": "dark",
       "options": [
         {
           "value": "beijing",
@@ -336,7 +336,7 @@
     {
       "key": "nodeCardPingStyle",
       "type": "select",
-      "default": "bars",
+      "default": "sparkline",
       "options": [
         {
           "value": "bars",

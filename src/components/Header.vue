@@ -17,7 +17,7 @@ const isScrolled = inject<ReturnType<typeof ref<boolean>>>('isScrolled', ref(fal
 
 // 自定义站点图标加载失败时（地址失效、跨域拦截等）回退到内置图标
 const failedSiteIcon = ref('')
-const siteFavicon = computed(() => appStore.siteIconUrl && appStore.siteIconUrl !== failedSiteIcon.value ? appStore.siteIconUrl : '/favicon.svg')
+const siteFavicon = computed(() => appStore.siteIconUrl && appStore.siteIconUrl !== failedSiteIcon.value ? appStore.siteIconUrl : '/assets/favicon.svg')
 function onSiteIconError(): void {
   if (appStore.siteIconUrl)
     failedSiteIcon.value = appStore.siteIconUrl

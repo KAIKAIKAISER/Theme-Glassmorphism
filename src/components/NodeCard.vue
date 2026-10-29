@@ -59,7 +59,7 @@ const NODE_METRIC_ICONS = {
   traffic: 'tabler:arrows-transfer-up-down',
 } as const
 
-const pingSparkline = computed(() => appStore.publicSettings?.theme_settings?.nodeCardPingStyle === 'sparkline')
+const pingSparkline = computed(() => (appStore.publicSettings?.theme_settings?.nodeCardPingStyle ?? 'sparkline') !== 'bars')
 const multiPing = computed(() => appStore.publicSettings?.theme_settings?.homepageMultiPing !== false && appStore.nodeCardSize !== 'mini')
 const isMiniNodeCard = computed(() => appStore.nodeCardSize === 'mini')
 const nodeCardXSize = computed(() => appStore.nodeCardSize === 'large' ? 'large' : 'medium')
@@ -262,10 +262,10 @@ function hasRegion(region: string | null | undefined): boolean {
         >
           <Icon :icon="isFavorite ? 'tabler:star-filled' : 'tabler:star'" width="14" height="14" />
         </button>
-        <img :src="getOSImage(props.node.os)" :alt="getOSName(props.node.os)" class="size-4">
+        <img :src="getOSImage(props.node.os)" :alt="getOSName(props.node.os)" class="size-4" @error="(e: any) => (e.target.src = '/assets/images/logo/linux.svg')">
         <img
           v-if="hasRegion(props.node.region)"
-          :src="`/images/flags/${getRegionCode(props.node.region)}.svg`"
+          :src="`/assets/images/flags/${(getRegionCode(props.node.region) || 'UN').toUpperCase()}.svg`" @error="(e: any) => (e.target.src = '/assets/images/flags/UN.svg')"
           :alt="getRegionAltText(props.node.region)"
           class="size-5 shrink-0"
         >

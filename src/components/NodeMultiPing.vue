@@ -21,7 +21,7 @@ let failures = 0
 const config = computed(() => store.publicSettings?.theme_settings ?? {})
 const rows = computed(() => buildPingRows(data.value.records, data.value.tasks, String(config.value.homepageMultiPingTaskIds ?? ''), Number(config.value.homepageMultiPingCount ?? 6)))
 const enabled = computed(() => props.enabled && active.value && visible.value === 'visible')
-const sparkline = computed(() => config.value.nodeCardPingStyle === 'sparkline')
+const sparkline = computed(() => (config.value.nodeCardPingStyle ?? 'sparkline') !== 'bars')
 function stop() {sequence++;clearTimeout(timer)}
 async function refresh() {
   stop()
